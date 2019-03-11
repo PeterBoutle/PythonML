@@ -1,30 +1,27 @@
 import numpy as np
+import pandas as pd
 
 filepath = "data\\weight-height.csv"
 
-
-data = np.genfromtxt(filepath, delimiter=',',names=True,dtype=None, encoding="utf8",usecols=(0,1,2))
+data = pd.read_csv(filepath)
+conversion = {'Male':1,'Female':0}
+data["Gender"] = data["Gender"].map(conversion)
+data = data.to_numpy()
 #shuffle the data around so that we can take the first x percent better.
 data = np.take(data,np.random.permutation(data.shape[0]),axis=0,out=data)
 train_size = 0.75
 test_size = 0.25
 
-print(data.shape)
-
-if data[:,0]=="Male":
-    data[:,0]=1
-else:
-    data[:,0]=0
-
-print(data)
-
-train_rows = int(data.size * train_size)
-test_rows = int(data.size * test_size)
+train_rows = int(len(data) * train_size)
+test_rows = int(len(data) * test_size)
 
 train = data[:train_rows]
 test = data[train_rows:train_rows + test_rows]
 
 
+print("train consists of {} records:".format(len(train)))
+print(train)
 
-print(train.size)
-print("test size {}".format(test.size))
+print("test consists of {} records:".format(len(test)))
+print(test)
+
